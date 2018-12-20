@@ -10,10 +10,10 @@ import com.araujo.jordan.fractalbeer.model.Beer
  * Parcelable for easily pass the Beer thought Activities
  * Created by araujojordan on 19/12/2018
  */
-class BeerListPresenter : BeerListContract.Presenter {
+open class BeerListPresenter : BeerListContract.Presenter {
 
-    private lateinit var view: BeerListContract.View
-    private lateinit var beerInteractor: BeerInteractor
+    lateinit var view: BeerListContract.View
+    lateinit var beerInteractor: BeerInteractor
 
     // Attach the View that will request usage from the Injection
     override fun attach(view: BeerListContract.View) {
@@ -22,7 +22,8 @@ class BeerListPresenter : BeerListContract.Presenter {
 
     // Starts the Interactor
     override fun resume() {
-        beerInteractor = BeerInteractor(this)
+        beerInteractor = BeerInteractor()
+        beerInteractor.attachPresenter(this)
     }
 
     // Request to load beer list from BeerInteractor using pagination
@@ -34,7 +35,7 @@ class BeerListPresenter : BeerListContract.Presenter {
 
 
     // Callback from the Interactor of the orderBeers() request
-    fun loadDataComplete(list: List<Beer>) {
+    open fun loadDataComplete(list: List<Beer>) {
         view.showLoading(false)
         view.loadDataSuccess(list)
     }
@@ -45,7 +46,7 @@ class BeerListPresenter : BeerListContract.Presenter {
     }
 
     // Callback from the Interactor of the queryData() request
-    fun queryDataComplete(list: List<Beer>) {
+    open fun queryDataComplete(list: List<Beer>) {
         view.showLoading(false)
         view.loadQuerySuccess(list)
     }

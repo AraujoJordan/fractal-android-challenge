@@ -2,7 +2,6 @@ package com.araujo.jordan.fractalbeer.api
 
 import android.util.Log
 import com.araujo.jordan.fractalbeer.model.Beer
-import com.araujo.jordan.fractalbeer.ui.BasePresenter
 import com.araujo.jordan.fractalbeer.ui.beerList.BeerListPresenter
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,18 +16,16 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class BeerInteractor {
 
-    val BASE_URL = "https://api.punkapi.com/v2/"
-    val retrofit = Retrofit.Builder()
+    private val BASE_URL = "https://api.punkapi.com/v2/"
+    private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val beerAPI = retrofit.create(BeerService::class.java)
+    private val beerAPI = retrofit.create(BeerService::class.java)
+    private var presenter: BeerListPresenter? = null
 
-    var presenter : BeerListPresenter
-
-
-    //Presenter reference to retrieve the results to it
-    constructor(presenter : BeerListPresenter) {
+    // Attach presenter to use its methods of callback
+    fun attachPresenter(presenter: BeerListPresenter) {
         this.presenter = presenter
     }
 
@@ -42,13 +39,12 @@ class BeerInteractor {
             override fun onResponse(call: Call<List<Beer>>, response: Response<List<Beer>>) {
                 if (response.isSuccessful) {
                     val beerList = response.body()
-                    presenter.loadDataComplete(beerList!!)
+                    presenter?.loadDataComplete(beerList!!)
                 } else {
                     Log.e("BeerInteractor", "OrderBeers() onResponse()" + response.errorBody())
-                    presenter.loadDataComplete(ArrayList())
+                    presenter?.loadDataComplete(ArrayList())
                 }
             }
-
         })
     }
 
@@ -63,10 +59,10 @@ class BeerInteractor {
             override fun onResponse(call: Call<List<Beer>>, response: Response<List<Beer>>) {
                 if (response.isSuccessful) {
                     val beerList = response.body()
-                    presenter.queryDataComplete(beerList!!)
+                    presenter?.queryDataComplete(beerList!!)
                 } else {
                     Log.e("BeerInteractor", "OrderBeers() onResponse()" + response.errorBody())
-                    presenter.queryDataComplete(ArrayList())
+                    presenter?.queryDataComplete(ArrayList())
                 }
             }
 
