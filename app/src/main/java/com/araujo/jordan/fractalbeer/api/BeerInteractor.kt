@@ -11,9 +11,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
+ * BeerInteractor
+ * API request manager that resolves the Retrofit2 usage
  * Created by araujojordan on 18/12/18.
  */
-
 class BeerInteractor {
 
     val BASE_URL = "https://api.punkapi.com/v2/"
@@ -26,11 +27,12 @@ class BeerInteractor {
     var presenter : BeerListPresenter
 
 
+    //Presenter reference to retrieve the results to it
     constructor(presenter : BeerListPresenter) {
         this.presenter = presenter
     }
 
-
+     // Request 25 beers from the PunkAPI with pagination
     fun orderBeers(page: Int) {
         beerAPI.getBeers(page.toString()).enqueue(object : Callback<List<Beer>> {
             override fun onFailure(call: Call<List<Beer>>, t: Throwable) {
@@ -51,6 +53,7 @@ class BeerInteractor {
     }
 
 
+    // Request beers from the PunkAPI by query the beer name
     fun orderBeersByName(beerName: String) {
         beerAPI.getBeersByName(beerName).enqueue(object : Callback<List<Beer>> {
             override fun onFailure(call: Call<List<Beer>>, t: Throwable) {

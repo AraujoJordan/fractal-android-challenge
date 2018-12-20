@@ -7,6 +7,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
+ * BeerService
+ * Implements the requests itself
  * Created by araujojordan on 18/12/18.
  */
 

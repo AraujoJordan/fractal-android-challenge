@@ -7,6 +7,11 @@ import com.araujo.jordan.fractalbeer.model.Beer
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_beerdetails.*
 
+/**
+ * BeerDetailsActivity
+ * Detail screen, it shows a detailed screen of one beer
+ * Created by araujojordan on 19/12/2018
+ */
 class BeerDetailsActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_BEER = "EXTRA_BEER"

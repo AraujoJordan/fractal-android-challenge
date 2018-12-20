@@ -5,7 +5,8 @@ import com.araujo.jordan.fractalbeer.ui.BaseView
 import com.araujo.jordan.fractalbeer.model.Beer
 
 /**
- * Created by araujojordan on 18/12/18.
+ * Manage the control or ViewProjection layers
+ * Created by araujojordan on 18/12/2018.
  */
 
 class BeerListContract {

@@ -23,14 +23,20 @@ import android.support.v4.view.MenuItemCompat.setOnActionExpandListener
 import android.util.Log
 import android.view.MenuItem
 
-
+/**
+ * BeerListActivity
+ * Start screen from application, it shows a list of beers from PunkAPI
+ * Created by araujojordan on 19/12/2018
+ */
 class BeerListActivity : AppCompatActivity(), BeerListContract.View {
 
-    var presenter = BeerListPresenter()
+    var presenter = BeerListPresenter() //from MVP
     var beerAdapter = BeerAdapter()
-    var page = 0
-    private var skeletonScreen: RecyclerViewSkeletonScreen? = null
 
+    var page = 0 //for pagination
+    private var skeletonScreen: RecyclerViewSkeletonScreen? = null //fancy loading
+
+    //Infinite scroll implementation
     var listener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             if (recyclerView.canScrollVertically(1).not()) {
@@ -38,19 +44,19 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
             }
         }
     }
+
+    //Callback from the click of the recycleview item
+    //It comes with the Beer object and the view of click
     var listCallback = object : BeerAdapter.ListCallback {
-        override fun OnRetrieveBeer(beer: Beer, view: View) {
+        override fun onRetrieveBeer(beer: Beer, view: View) {
             val intent = Intent(
                 this@BeerListActivity,
                 BeerDetailsActivity::class.java
             )
 
             val p1 = Pair.create(view.findViewById(R.id.beeritem_img) as View, "beerImg")
-
             val options = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(this@BeerListActivity, p1)
-
-
             intent.putExtra(BeerDetailsActivity.EXTRA_BEER, beer)
             startActivity(intent, options.toBundle())
         }
@@ -113,6 +119,9 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
         return super.onCreateOptionsMenu(menu)
     }
 
+
+
+     // Query the data from PunkAPI, using the Presenter and Interactor as interceptor
     fun query(newText:String) {
         if (newText.isBlank()) {
             Log.d("onQueryTextSubmit","isBlank")
@@ -128,6 +137,7 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
         }
     }
 
+    // Show the fancy skeleton cards
     override fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             skeletonScreen = Skeleton.bind(beerlist_recyleview)
@@ -148,6 +158,7 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
             .setCancelable(true).create().show()
     }
 
+    //Callback from Presenter, returns a list of beers WITH query
     override fun loadQuerySuccess(list: List<Beer>) {
         runOnUiThread {
             page = 0
@@ -158,6 +169,7 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
         }
     }
 
+    //Callback from Presenter, returns a list of beers WITHOUT query
     override fun loadDataSuccess(list: List<Beer>) {
         runOnUiThread {
             beerAdapter.addToList(list as MutableList<Beer>)
@@ -165,6 +177,7 @@ class BeerListActivity : AppCompatActivity(), BeerListContract.View {
         }
     }
 
+    //When the query comes empty, show the image of nothing was found
     fun showEmptyListImage(isEmpty:Boolean) {
         if(isEmpty) {
             beerlist_empty.visibility = View.VISIBLE
